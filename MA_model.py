@@ -16,7 +16,6 @@ for i in range (2,num_steps) :
 plt.plot(ma_model)
 
 # Draw the mean or expected value line : y = 0
-mean = 2*0.8 -1
 plt.plot((0,num_steps),(0, 0) ,color = 'grey')
 
 plt.show()
