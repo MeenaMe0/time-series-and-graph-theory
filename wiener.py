@@ -1,21 +1,21 @@
-import numpy as np
+"""
+Wiener process (standard Brownian motion): the cumulative sum of
+Gaussian increments with variance DT per step, so the process has
+independent, stationary increments and variance growing linearly
+with time.
+"""
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Set the number of time steps and the time step size
-num_steps = 500
-dt = 0.01
-sigma = np.sqrt(dt)
+NUM_STEPS = 500
+DT = 0.01
+SIGMA = np.sqrt(DT)   # std dev per step, chosen so Var(x[t]) = t * DT
 
-# Initialize the Wiener process
-# Make every element in list = 0
-x = np.zeros(num_steps)
+if __name__ == "__main__":
+    rng = np.random.default_rng()
+    increments = rng.normal(0, SIGMA, size=NUM_STEPS - 1)
+    x = np.concatenate(([0.0], np.cumsum(increments)))
 
-# Generate the Wiener process by summing up the increments
-for i in range(1, num_steps):
-    # value = previous value + random from normal distribution 
-    # normal : mean = 0 , sd = sigma
-    x[i] = x[i-1] + np.random.normal(0, sigma)
-
-# Plot the Wiener process
-plt.plot(x)
-plt.show()
+    plt.plot(x)
+    plt.title("Wiener process")
+    plt.show()

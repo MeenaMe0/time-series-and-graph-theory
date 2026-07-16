@@ -1,22 +1,31 @@
+"""
+Ornstein-Uhlenbeck process: a mean-reverting stochastic differential
+equation,
+
+    dX = -THETA * X * dt + SIGMA * dW
+
+simulated with the Euler-Maruyama method. Unlike the Wiener process /
+random walk above, each step depends on the *current* value (the
+mean-reversion term), so it can't be reduced to a plain cumulative sum
+-- the loop below is inherent to the recursion, not something to
+vectorize away.
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 
+NUM_STEPS = 500
+DT = 0.01
+THETA = 10   # mean-reversion speed: how fast X is pulled back toward 0
+SIGMA = 3    # noise magnitude
 
-# Set the number of time steps ,the noise and parameters
-num_steps = 500 
-dt = 0.01
-speed = 10
-sigma = 3
-dwiener = np.random.normal(0, np.sqrt(dt),num_steps)    # difference of weiner process is normal distribution
+if __name__ == "__main__":
+    rng = np.random.default_rng()
+    dW = rng.normal(0, np.sqrt(DT), NUM_STEPS)   # Wiener process increments
 
-# Generate the example of SDE and set the initial value
-sde_ex = []
-sde_ex.append(0)
+    x = np.zeros(NUM_STEPS)
+    for i in range(1, NUM_STEPS):
+        x[i] = x[i - 1] - THETA * x[i - 1] * DT + SIGMA * dW[i - 1]
 
-for i in range (1,num_steps) :
-    # Add the random value to list of random variable : sde_ex
-   sde_ex.append(sde_ex[i-1] - speed*(sde_ex[i-1])*dt + sigma*(dwiener[i-1]))
-
-# Plot the SDE model
-plt.plot(sde_ex)
-plt.show()
+    plt.plot(x)
+    plt.title("Ornstein-Uhlenbeck process (mean-reverting SDE)")
+    plt.show()
