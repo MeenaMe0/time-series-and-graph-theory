@@ -76,6 +76,13 @@ def horizontal_visibility_graph(t, y):
     return G
 
 
+def edge_weights_euclidean(G, t, y):
+    """Weight each edge of G by Euclidean distance between its two
+    points in (time, value) space. Used by the AR degree-distribution
+    scripts, which draw edge width proportional to 1/sqrt(distance)."""
+    return {(i, j): np.sqrt((y[i] - y[j]) ** 2 + (t[i] - t[j]) ** 2) for i, j in G.edges()}
+
+
 def plot_visibility_graph(t, y, G, title):
     """Draw the series as bars (as in the report's explanatory figure)
     with a line for every visibility edge connecting the bar tops."""
